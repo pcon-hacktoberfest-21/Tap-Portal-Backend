@@ -1,0 +1,23 @@
+{
+  "name": "Tap-Portal-Backend",
+  "version": "1.0.0",
+  "description": "---\r ![GitHub custom open for Contribution](https://img.shields.io/static/v1?label=Open%20For&message=Contribution&color=%3CCOLOR%3E)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pcon-code-tribe/Tap-Portal-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pcon-code-tribe/Tap-Portal-Backend/issues"
+  },
+  "homepage": "https://github.com/pcon-code-tribe/Tap-Portal-Backend#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
