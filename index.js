@@ -1,18 +1,14 @@
 require("dotenv").config()
-const PORT = process.env.PORT
+const PORT = process.env.PORT | 8000;
 
 const express = require("express")
 const app = express()
 
 // importing database content
-var db= require('./db')
+const db= require('./db')
 
 //requiring routes
 const studentAuth = require('./routes/students/auth')
-
-
-
-
 
 //using routes
 app.use('/student',studentAuth);

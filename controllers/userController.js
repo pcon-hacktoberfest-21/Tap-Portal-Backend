@@ -12,7 +12,6 @@ module.exports = {
         const password = req.body.password;   /*'password'*/
 
         //SQL Query
-
         db.query(`SELECT * FROM ALL_USER WHERE Email = ? `,[email],async function(err, results){
             if(err){
                console.log(err)
