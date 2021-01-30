@@ -12,7 +12,7 @@ router.get('/logout', async (req, res) => {
     const token = req.body.token;
     userController.logout(token, email)
     res.send({
-        message: "Successfully logged out"
+        message: "Successfully logged you out"
     })
 
 })
