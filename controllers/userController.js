@@ -8,14 +8,15 @@ module.exports = {
     login: async (req, res) => {
 
         //Acquiring email and passwords from body
-        const email = req.body.email;  /*2019ugcs001@nitjsr.ac.in*/
-        const password = req.body.password;   /*'password'*/
+        const email = req.body.email;  
+        const password = req.body.password;   
 
         //SQL Query
         db.query(`SELECT * FROM ALL_USER WHERE Email = ? `,[email],async function(err, results){
             if(err){
                console.log(err)
                res.send({
+                    status: false,
                     message:"Something went wrong"
                })
             }
@@ -25,12 +26,12 @@ module.exports = {
                 if(results.length > 0){
                     const isEqual = await bcrypt.compare(password,results[0].Password);
                     if(!isEqual){
-
                         //Incorrect Password 
                         console.log( "Incorrect Password");
                         status = false;
                         message = "Incorrect Password";
                     }
+                    
                     let token;
 
                     //If token is not there then providing a new token
@@ -63,13 +64,14 @@ module.exports = {
 
                     if(status){
                         res.send({
-                            token: token,
-                            tokenExpiration: 1,
+                            status,
+                            token,
                             email:  results[0].Email
                         })
                     }
                     else{
                         res.send({
+                            status,
                             message
                         })
                     }
@@ -77,6 +79,7 @@ module.exports = {
                 else{
                     console.log("Student not found")
                     res.send({
+                        status: false,
                         message: "Student not found"
                     })
                 }
