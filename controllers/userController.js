@@ -78,25 +78,28 @@ module.exports = {
 
             if (status) {
               res.send({
-                token: token,
-                tokenExpiration: 1,
-                email: results[0].Email,
-              });
-            } else {
-              res.send({
-                message,
-              });
-            }
-          } else {
-            console.log("Student not found");
-            res.send({
-              message: "Student not found",
-            });
-          }
+                status,
+                token,
+                email:  results[0].Email
+            })
         }
-      }
-    );
-  },
+        else{
+            res.send({
+                status,
+                message
+            })
+        }
+    }
+    else{
+        console.log("Student not found")
+        res.send({
+            status: false,
+            message: "Student not found"
+        })
+    }
+}
+})
+}, 
 
   // Register USERS
   register: async (req, res) => {
@@ -113,39 +116,45 @@ module.exports = {
     //Hashing the password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    //SQL query
-    db.query(
-      `INSERT INTO ALL_USER (Email, Password) VALUES(?,?)`,
-      [email, hashedPassword],
-      function (err, results) {
-        if (err) {
-          console.log(err);
+     //SQL query
+     db.query(`INSERT INTO ALL_USER (Email, Password) VALUES(?,?)`,[email, hashedPassword],function(err, results){
+      //Registration failed
+      if(err){
+          console.log(err)
           res.send({
-            message: err.sqlMessage,
-          });
-        } else {
-          console.log(results);
-          res.send({
-            message: "Successfully registered",
-          });
-        }
+              status: false,
+              message: err.sqlMessage
+          })
       }
-    );
-  },
+      //Registration success  
+      else  {
+          console.log(results)
+          res.send({
+              status: true,
+              message:"Successfully registered"
+          })
+      }
+  })
+},
 
-  //Logout USERS
-  logout: async (email) => {
-    // Deleting the jwt token from database
-    db.query(
-      `UPDATE ALL_USER SET Token = NULL WHERE Email = ?`,
-      [email],
-      function (err, results) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(results);
-        }
+//Logout USERS
+logout : async (req, res) => {
+  
+  // Deleting the jwt token from database
+  db.query(`UPDATE ALL_USER SET Token = NULL WHERE Email = ?`,[req.body.email],function(err, results){
+      if(err){
+          res.send({
+              status: false,
+              message: err.sqlMessage
+          })
       }
-    );
-  },
-};
+      else{
+          res.send({
+              status: true,
+              message:"Successfully logged you out"
+          })
+      }
+  })
+
+}
+}

@@ -25,9 +25,10 @@ module.exports = {
         if (err) {
           console.log(err);
           res.send({
-            message: "Something went wrong",
-          });
-        } else {
+            status: false,
+            message:"Something went wrong"
+       })
+    } else {
           let status = true,
             message;
           //USER is found
@@ -88,9 +89,9 @@ module.exports = {
               });
             }
           } else {
-            console.log("Student not found");
+            console.log("User not found");
             res.send({
-              message: "Student not found",
+              message: "User not found",
             });
           }
         }
@@ -136,18 +137,25 @@ module.exports = {
   },
 
   //Logout USERS
-  logout: async (email) => {
+  logout: async (req,res) => {
     // Deleting the jwt token from database
     db.query(
       `UPDATE ADMIN SET Token = NULL WHERE Email = ?`,
-      [email],
+      [req.body.email],
       function (err, results) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(results);
+        if(err){
+            res.send({
+                status: false,
+                message: err.sqlMessage
+            })
         }
-      }
-    );
-  },
-};
+        else{
+            res.send({
+                status: true,
+                message:"Successfully logged you out"
+            })
+        }
+    })
+
+}
+}
