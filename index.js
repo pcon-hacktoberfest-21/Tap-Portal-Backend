@@ -1,22 +1,37 @@
+require("dotenv").config()
+const PORT = process.env.PORT | 3000;
+
+const bodyParser = require('body-parser')
 const express = require("express")
 const app = express()
-require("dotenv").config()
-const PORT = process.env.PORT
-const bodyParser = require('body-parser');
-
-
-//import route for admin auth
-const authAdmin = require('./route/authAdmin');
-const adminPage = require('./route/adminPage');
-
-//middleware for parsing body
+// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
+ 
+// parse application/json
 app.use(bodyParser.json())
 
-//route middleware for admin
-app.use('/admin',authAdmin);
-app.use('/admin-dashboard',adminPage);
+// importing database content
+const db= require('./db')
+
+//requiring routes
+const studentAuth = require('./routes/students/auth')
+const adminAuth = require('./routes/admin/auth')
+
+//using routes
+app.use('/student',studentAuth);
+app.use('/admin',adminAuth);
+
+
+// only for testiong
+//var logger = require('./utils/logger')
+// app.get('/',(req,res)=>{
+//     var ip = (req.headers['x-forwarded-for'] || '').split(',')[0] || req.connection.remoteAddress;
+//    logger("user loged in","2029UGCS999",ip).then(res.send("hello"))
+   
+// })
 
 
 
-app.listen(PORT,()=>console.log(`Listening on port ${PORT}`))
+app.listen(PORT,()=>{
+    console.log(`Listening at port ${PORT}`)
+})
