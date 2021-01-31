@@ -1,20 +1,13 @@
 const router = require('express').Router();
 const userController = require('../../controllers/userController');
-const refreshToken = require('../../utils/refreshToken');
 
+//login route
 router.get('/login', userController.login)
 
+//register route
 router.post('/register', userController.register)
 
-router.get('/logout', async (req, res) => {
-
-    const email = req.body.email;
-    const token = req.body.token;
-    userController.logout(token, email)
-    res.send({
-        message: "Successfully logged you out"
-    })
-
-})
+//logout route
+router.get('/logout', userController.logout)
 
 module.exports = router;

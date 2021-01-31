@@ -91,24 +91,27 @@ module.exports = {
     register: async (req, res) => {
         
         //Requiring email and password from body
-        const email = req.body.email;  /*2019ugcs001@nitjsr.ac.in*/
-        const password = req.body.password;   /*'password'*/
+        const email = req.body.email;
+        const password = req.body.password;  
         
         //Hashing the password
         const hashedPassword = await bcrypt.hash(password,12)
 
         //SQL query
         db.query(`INSERT INTO ALL_USER (Email, Password) VALUES(?,?)`,[email, hashedPassword],function(err, results){
+            //Registration failed
             if(err){
                 console.log(err)
                 res.send({
+                    status: false,
                     message: err.sqlMessage
                 })
             }
-                
+            //Registration success  
             else  {
                 console.log(results)
                 res.send({
+                    status: true,
                     message:"Successfully registered"
                 })
             }
@@ -116,15 +119,21 @@ module.exports = {
     },
 
     //Logout USERS
-    logout : async (email) => {
+    logout : async (req, res) => {
         
         // Deleting the jwt token from database
-        db.query(`UPDATE ALL_USER SET Token = NULL WHERE Email = ?`,[email],function(err, results){
+        db.query(`UPDATE ALL_USER SET Token = NULL WHERE Email = ?`,[req.body.email],function(err, results){
             if(err){
-                console.log(err)
+                res.send({
+                    status: false,
+                    message: err.sqlMessage
+                })
             }
             else{
-                console.log(results);
+                res.send({
+                    status: true,
+                    message:"Successfully logged you out"
+                })
             }
         })
 
