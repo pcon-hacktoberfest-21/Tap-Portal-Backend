@@ -1,8 +1,8 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const db = require("../db");
-const refreshToken = require("../utils/refreshToken");
-const { validateStudent } = require("../middleWares/validation");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const db = require('../db');
+const refreshToken = require('../utils/refreshToken');
+const { validateStudent } = require('../middleWares/validation');
 
 module.exports = {
   //Login USERS
