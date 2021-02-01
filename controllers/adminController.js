@@ -2,32 +2,33 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db = require("../db");
 const refreshToken = require("../utils/refreshToken");
-const { validateStudent } = require("../middleWares/validation");
+const { validateAdmin, validateLogin } = require("../middleWares/validation");
 
 module.exports = {
-  //Login USERS
+  //Login ADMIN
   login: async (req, res) => {
-    //Acquiring email and passwords from body
+    //Acquiring data from body
     const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
     const password = req.body.password; /*'password'*/
 
      //INPUT DATA VALIDATION
-     const validation = validateStudent(req);
+     const validation = validateLogin(req);
      if (validation.error) {
        return res.status(400).send(validation.error.details[0].message);
      }
 
     //SQL Query
     db.query(
-      `SELECT * FROM ALL_USER WHERE Email = ? `,
+      `SELECT * FROM ADMIN WHERE Email = ? `,
       [email],
       async function (err, results) {
         if (err) {
           console.log(err);
           res.send({
-            message: "Something went wrong",
-          });
-        } else {
+            status: false,
+            message:"Something went wrong"
+       })
+    } else {
           let status = true,
             message;
           //USER is found
@@ -63,7 +64,7 @@ module.exports = {
 
             //Saving the token in database
             db.query(
-              `UPDATE ALL_USER SET Token = ? WHERE Email = ?`,
+              `UPDATE ADMIN SET Token = ? WHERE Email = ?`,
               [token, email],
               function (err, results) {
                 if (err) {
@@ -78,37 +79,36 @@ module.exports = {
 
             if (status) {
               res.send({
-                status,
-                token,
-                email:  results[0].Email
-            })
-        }
-        else{
+                token: token,
+                tokenExpiration: 1,
+                email: results[0].Email,
+              });
+            } else {
+              res.send({
+                message,
+              });
+            }
+          } else {
+            console.log("User not found");
             res.send({
-                status,
-                message
-            })
+              message: "User not found",
+            });
+          }
         }
-    }
-    else{
-        console.log("Student not found")
-        res.send({
-            status: false,
-            message: "Student not found"
-        })
-    }
-}
-})
-}, 
+      }
+    );
+  },
 
   // Register USERS
   register: async (req, res) => {
-    //Requiring email and password from body
-    const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
-    const password = req.body.password; /*'password'*/
-
+   //Acquiring data from body
+   const name = req.body.name; /*aman jha*/
+   const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
+   const password = req.body.password; /*'password'*/
+   const branch = req.body.branch; /*'cse'*/
+    
     //INPUT DATA VALIDATION
-    const validation = validateStudent(req);
+    const validation = validateAdmin(req);
     if (validation.error) {
       return res.status(400).send(validation.error.details[0].message);
     }
@@ -116,45 +116,46 @@ module.exports = {
     //Hashing the password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-     //SQL query
-     db.query(`INSERT INTO ALL_USER (Email, Password) VALUES(?,?)`,[email, hashedPassword],function(err, results){
-      //Registration failed
-      if(err){
-          console.log(err)
+    //SQL query
+    db.query(
+      `INSERT INTO ADMIN (Name, Email, Password, Branch) VALUES(?,?,?,?)`,
+      [name, email, hashedPassword, branch],
+      function (err, results) {
+        if (err) {
+          console.log(err);
           res.send({
-              status: false,
-              message: err.sqlMessage
-          })
-      }
-      //Registration success  
-      else  {
-          console.log(results)
+            message: err.sqlMessage,
+          });
+        } else {
+          console.log(results);
           res.send({
-              status: true,
-              message:"Successfully registered"
-          })
+            message: "Successfully registered",
+          });
+        }
       }
-  })
-},
+    );
+  },
 
-//Logout USERS
-logout : async (req, res) => {
-  
-  // Deleting the jwt token from database
-  db.query(`UPDATE ALL_USER SET Token = NULL WHERE Email = ?`,[req.body.email],function(err, results){
-      if(err){
-          res.send({
-              status: false,
-              message: err.sqlMessage
-          })
-      }
-      else{
-          res.send({
-              status: true,
-              message:"Successfully logged you out"
-          })
-      }
-  })
+  //Logout USERS
+  logout: async (req,res) => {
+    // Deleting the jwt token from database
+    db.query(
+      `UPDATE ADMIN SET Token = NULL WHERE Email = ?`,
+      [req.body.email],
+      function (err, results) {
+        if(err){
+            res.send({
+                status: false,
+                message: err.sqlMessage
+            })
+        }
+        else{
+            res.send({
+                status: true,
+                message:"Successfully logged you out"
+            })
+        }
+    })
 
 }
 }
