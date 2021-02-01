@@ -11,11 +11,13 @@ module.exports = {
     const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
     const password = req.body.password; /*'password'*/
 
-     //INPUT DATA VALIDATION
-     const validation = validateStudent(req);
-     if (validation.error) {
-       return res.status(400).send(validation.error.details[0].message);
-     }
+    //INPUT DATA VALIDATION
+    const validation = validateStudent(req);
+    if (validation.error) {
+      return res
+        .status(400)
+        .send({ status:false,message: validation.error.details[0].message });
+    }
 
     //SQL Query
     db.query(
@@ -24,7 +26,7 @@ module.exports = {
       async function (err, results) {
         if (err) {
           console.log(err);
-          res.send({
+          res.status(500).send({
             message: "Something went wrong",
           });
         } else {
@@ -80,26 +82,25 @@ module.exports = {
               res.send({
                 status,
                 token,
-                email:  results[0].Email
-            })
-        }
-        else{
-            res.send({
+                email: results[0].Email,
+              });
+            } else {
+              res.send({
                 status,
-                message
-            })
+                message,
+              });
+            }
+          } else {
+            console.log("Student not found");
+            res.status(400).send({
+              status:false,
+              message: "Student not found",
+            });
+          }
         }
-    }
-    else{
-        console.log("Student not found")
-        res.send({
-            status: false,
-            message: "Student not found"
-        })
-    }
-}
-})
-}, 
+      }
+    );
+  },
 
   // Register USERS
   register: async (req, res) => {
@@ -110,51 +111,105 @@ module.exports = {
     //INPUT DATA VALIDATION
     const validation = validateStudent(req);
     if (validation.error) {
-      return res.status(400).send(validation.error.details[0].message);
+      return res
+        .status(400)
+        .send({ status:false,message: validation.error.details[0].message });
     }
 
     //Hashing the password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-     //SQL query
-     db.query(`INSERT INTO ALL_USER (Email, Password) VALUES(?,?)`,[email, hashedPassword],function(err, results){
-      //Registration failed
-      if(err){
-          console.log(err)
+    //SQL query
+    db.query(
+      `INSERT INTO ALL_USER (Email, Password) VALUES(?,?)`,
+      [email, hashedPassword],
+      function (err, results) {
+        //Registration failed
+        if (err) {
+          console.log(err);
           res.send({
-              status: false,
-              message: err.sqlMessage
-          })
-      }
-      //Registration success  
-      else  {
-          console.log(results)
+            status: false,
+            message: err.sqlMessage,
+          });
+        }
+        //Registration success
+        else {
+          console.log(results);
           res.send({
-              status: true,
-              message:"Successfully registered"
-          })
+            status: true,
+            message: "Successfully registered",
+          });
+        }
       }
-  })
-},
+    );
+  },
 
-//Logout USERS
-logout : async (req, res) => {
-  
-  // Deleting the jwt token from database
-  db.query(`UPDATE ALL_USER SET Token = NULL WHERE Email = ?`,[req.body.email],function(err, results){
-      if(err){
-          res.send({
-              status: false,
-              message: err.sqlMessage
-          })
-      }
-      else{
-          res.send({
-              status: true,
-              message:"Successfully logged you out"
-          })
-      }
-  })
+  //Logout USERS
+  logout: async (req, res) => {
+    //Acquiring data from body
+    const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
+    const password = req.body.password; /*'password'*/
 
-}
-}
+    //INPUT DATA VALIDATION
+    const validation = validateStudent(req);
+    if (validation.error) {
+      return res
+        .status(400)
+        .send({ status:false,message: validation.error.details[0].message });
+    }
+
+    //SQL Query for validation
+    db.query(
+      `SELECT * FROM ALL_USER WHERE Email = ? `,
+      [email],
+      async function (err, results) {
+        if (err) {
+          console.log(err);
+          res.send({
+            status: false,
+            message: "Something went wrong",
+          });
+        } else {
+          //USER is found
+          if (results.length > 0) {
+            const isEqual = await bcrypt.compare(password, results[0].Password);
+            if (!isEqual) {
+              //Incorrect Password
+              console.log("Incorrect Password");
+              res.send({
+                status: false,
+                message: "Incorrect Password",
+              });
+            } else {
+
+              // Deleting the jwt token from database
+              db.query(
+                `UPDATE ALL_USER SET Token = NULL WHERE Email = ?`,
+                [email],
+                function (err, results) {
+                  if (err) {
+                    res.send({
+                      status: false,
+                      message: err.sqlMessage,
+                    });
+                  } else {
+                    res.send({
+                      status: true,
+                      message: "Successfully logged you out",
+                    });
+                  }
+                }
+              );
+            }
+          } else {
+            console.log("User not found");
+            res.status(400).send({
+              status:false,
+              message: "User not found",
+            });
+          }
+        }
+      }
+    );
+  },
+};
