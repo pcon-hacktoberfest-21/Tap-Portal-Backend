@@ -11,11 +11,14 @@ module.exports = {
     const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
     const password = req.body.password; /*'password'*/
 
-     //INPUT DATA VALIDATION
-     const validation = validateLogin(req);
-     if (validation.error) {
-       return res.status(400).send(validation.error.details[0].message);
-     }
+    //INPUT DATA VALIDATION
+    const validation = validateLogin(req);
+    if (validation.error) {
+      return res
+        .status(400)
+        .send({ status:false,
+          message: validation.error.details[0].message });
+    }
 
     //SQL Query
     db.query(
@@ -24,11 +27,11 @@ module.exports = {
       async function (err, results) {
         if (err) {
           console.log(err);
-          res.send({
+          res.status(500).send({
             status: false,
-            message:"Something went wrong"
-       })
-    } else {
+            message: "Something went wrong",
+          });
+        } else {
           let status = true,
             message;
           //USER is found
@@ -90,7 +93,8 @@ module.exports = {
             }
           } else {
             console.log("User not found");
-            res.send({
+            res.status(400).send({
+              status:false,
               message: "User not found",
             });
           }
@@ -101,16 +105,18 @@ module.exports = {
 
   // Register USERS
   register: async (req, res) => {
-   //Acquiring data from body
-   const name = req.body.name; /*aman jha*/
-   const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
-   const password = req.body.password; /*'password'*/
-   const branch = req.body.branch; /*'cse'*/
-    
+    //Acquiring data from body
+    const name = req.body.name; /*aman jha*/
+    const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
+    const password = req.body.password; /*'password'*/
+    const branch = req.body.branch; /*'cse'*/
+
     //INPUT DATA VALIDATION
     const validation = validateAdmin(req);
     if (validation.error) {
-      return res.status(400).send(validation.error.details[0].message);
+      return res
+        .status(400)
+        .send({ status:false,message: validation.error.details[0].message });
     }
 
     //Hashing the password
@@ -137,25 +143,72 @@ module.exports = {
   },
 
   //Logout USERS
-  logout: async (req,res) => {
-    // Deleting the jwt token from database
-    db.query(
-      `UPDATE ADMIN SET Token = NULL WHERE Email = ?`,
-      [req.body.email],
-      function (err, results) {
-        if(err){
-            res.send({
-                status: false,
-                message: err.sqlMessage
-            })
-        }
-        else{
-            res.send({
-                status: true,
-                message:"Successfully logged you out"
-            })
-        }
-    })
+  logout: async (req, res) => {
+    //Acquiring data from body
+    const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
+    const password = req.body.password; /*'password'*/
 
-}
-}
+    //INPUT DATA VALIDATION
+    const validation = validateLogin(req);
+    if (validation.error) {
+      return res
+        .status(400)
+        .send({ status:false,message: validation.error.details[0].message });
+    }
+
+    //SQL Query for validation
+    db.query(
+      `SELECT * FROM ADMIN WHERE Email = ? `,
+      [email],
+      async function (err, results) {
+        if (err) {
+          console.log(err);
+          res.send({
+            status: false,
+            message: "Something went wrong",
+          });
+        } else {
+          //USER is found
+          if (results.length > 0) {
+            const isEqual = await bcrypt.compare(password, results[0].Password);
+            if (!isEqual) {
+              //Incorrect Password
+              console.log("Incorrect Password");
+              res.send({
+                status: false,
+                message: "Incorrect Password",
+              });
+            } else {
+
+
+              // Deleting the jwt token from database
+              db.query(
+                `UPDATE ADMIN SET Token = NULL WHERE Email = ?`,
+                [email],
+                function (err, results) {
+                  if (err) {
+                    res.send({
+                      status: false,
+                      message: err.sqlMessage,
+                    });
+                  } else {
+                    res.send({
+                      status: true,
+                      message: "Successfully logged you out",
+                    });
+                  }
+                }
+              );
+            }
+          } else {
+            console.log("User not found");
+            res.status(400).send({
+              status:false,
+              message: "User not found",
+            });
+          }
+        }
+      }
+    );
+  },
+};
