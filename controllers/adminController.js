@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../db");
 const refreshToken = require("../utils/refreshToken");
@@ -144,42 +144,6 @@ module.exports = {
 
   //Logout USERS
   logout: async (req, res) => {
-    //Acquiring data from body
-    const email = req.body.email; /*2019ugcs001@nitjsr.ac.in*/
-    const password = req.body.password; /*'password'*/
-
-    //INPUT DATA VALIDATION
-    const validation = validateLogin(req);
-    if (validation.error) {
-      return res
-        .status(400)
-        .send({ status:false,message: validation.error.details[0].message });
-    }
-
-    //SQL Query for validation
-    db.query(
-      `SELECT * FROM ADMIN WHERE Email = ? `,
-      [email],
-      async function (err, results) {
-        if (err) {
-          console.log(err);
-          res.send({
-            status: false,
-            message: "Something went wrong",
-          });
-        } else {
-          //USER is found
-          if (results.length > 0) {
-            const isEqual = await bcrypt.compare(password, results[0].Password);
-            if (!isEqual) {
-              //Incorrect Password
-              console.log("Incorrect Password");
-              res.send({
-                status: false,
-                message: "Incorrect Password",
-              });
-            } else {
-
 
               // Deleting the jwt token from database
               db.query(
@@ -200,15 +164,5 @@ module.exports = {
                 }
               );
             }
-          } else {
-            console.log("User not found");
-            res.status(400).send({
-              status:false,
-              message: "User not found",
-            });
-          }
-        }
-      }
-    );
-  },
-};
+          } 
+        

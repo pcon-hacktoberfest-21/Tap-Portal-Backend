@@ -5,7 +5,7 @@ let pool = mysql.createPool({
     ssl:true,
     user:process.env.USER,
     password:process.env.PASSWORD,
-    database:"TapPortal"
+    database:process.env.DATABASE
 })
 
 pool.getConnection((err,connection)=>{

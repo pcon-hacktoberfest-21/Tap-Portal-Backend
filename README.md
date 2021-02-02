@@ -21,7 +21,6 @@ The aim of this project is to develop an online application for training and pla
 
 ### /admin/logout 
 -- METHOD : GET 
--- REQUIRED FIELDS : email, password
 
 ## Student Routes
 
@@ -35,4 +34,4 @@ The aim of this project is to develop an online application for training and pla
 
 ### /student/logout 
 -- METHOD : GET 
--- REQUIRED FIELDS : email, password
+
