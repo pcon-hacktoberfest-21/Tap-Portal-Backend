@@ -20,19 +20,3 @@ pool.getConnection((err,connection)=>{
 
 module.exports = pool;
 
-
-// Table for student
-    
-// pool.query(`DROP TABLE ALL_USER`, function(err, res){
-//     if(err)
-//     console.log(err)
-//     else
-//     console.log(`TAble dropped`)
-// })
-
-// pool.query(`CREATE TABLE ALL_USER (Email VARCHAR(50) NOT NULL PRIMARY KEY,Token VARCHAR(255),Password VARCHAR(255))`, function(err, results) {
-//     if(err)
-//     console.log(err)
-//     else
-//     console.log(results)
-// });
