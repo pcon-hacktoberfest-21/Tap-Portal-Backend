@@ -4,9 +4,9 @@
   "description": "The aim of this project is to develop an online application for training and placement department of our college.",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "npx nodemon index.js"
   },
   "repository": {
     "type": "git",
