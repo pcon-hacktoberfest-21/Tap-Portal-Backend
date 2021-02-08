@@ -5,16 +5,22 @@ let pool = mysql.createPool({
     ssl:true,
     user:process.env.USER,
     password:process.env.PASSWORD,
-    database:"TapPortal"
+
+    database:process.env.DATABASE
+
 })
 
 pool.getConnection((err,connection)=>{
     if(err){
         console.log(err);
-    } else console.log("Connected");
+
+    } 
+    else console.log("Database Connected");
+
     if(connection) connection.release();
-    return;
+        return;
 });
 
+module.exports = pool;
 
-module.exports=pool;
+
