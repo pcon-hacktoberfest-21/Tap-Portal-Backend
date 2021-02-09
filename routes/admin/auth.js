@@ -10,8 +10,10 @@ router.post('/register', adminController.register)
 //logout route
 router.get('/logout', adminController.logout)
 
-//get company
+//get companies
 router.get('/companies', adminController.companies);
+//get company by Id
+router.get('/companies/:id', adminController.companyById);
 //add company
 router.post('/companies/add', adminController.addCompany);
 //update or edit company

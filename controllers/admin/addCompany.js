@@ -29,11 +29,18 @@ module.exports = async (req, res) => {
       .status(400)
       .send({ status: false, message: validation.error.details[0].message });
   }
-  //SQL Query
+  //Aquiring Data to Insert
+  const Name = req.body.name;
+  const CGPA = req.body.cgpa || null;
+  const Date_Of_Visit = req.body.dateofvisit || null;
+  const Last_Date_Of_Apply = req.body.lastdateofapply || null;
+  const Package = req.body.package || null;
+  const Description = req.body.description || null;
+  const PDF = req.body.pdf || null;
 //SQL query
 db.query(
-    `INSERT INTO COMPANIES ( Name, CGPA) VALUES(?,?)`,
-    [ req.body.name, req.body.cgpa],
+    `INSERT INTO COMPANIES ( Name, CGPA, Date_Of_Visit, Last_Date_Of_Apply, Package, Description, PDF) VALUES(?,?,?,?,?,?,?)`,
+    [ Name, CGPA, Date_Of_Visit, Last_Date_Of_Apply, Package, Description, PDF ],
     function (err, results) {
       if (err) {
         if(err.sqlMessage){
@@ -50,6 +57,7 @@ db.query(
         logger(`New Company Added with Id =${results.insertId} & Name = ${req.body.name}`, email, ip);
         res.send({
           message: "New Company Added Successfully ",
+          Id: results.insertId
         });
       }
     }

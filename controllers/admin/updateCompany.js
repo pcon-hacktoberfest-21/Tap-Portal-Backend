@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const db = require("../../db");
 const logger = require("../../utils/logger");
-const { validateUpdateCompany } = require("../../middleWares/validation");
+const { validateNewCompany } = require("../../middleWares/validation");
 
 
 module.exports = async (req, res) => {
@@ -24,16 +24,26 @@ module.exports = async (req, res) => {
   const email = decodedToken.Email;
 
 //Validate Admin Details
-const validation = validateUpdateCompany(req);
+const validation = validateNewCompany(req);
 if (validation.error) {
   return res
     .status(400)
     .send({ status: false, message: validation.error.details[0].message });
 }
+  //Aquiring Data to Insert
+  const Name = req.body.name;
+  const CGPA = req.body.cgpa || null;
+  const Date_Of_Visit = req.body.dateofvisit || null;
+  const Last_Date_Of_Apply = req.body.lastdateofapply || null;
+  const Package = req.body.package || null;
+  const Description = req.body.description || null;
+  const PDF = req.body.pdf || null;
 //SQL query 
 db.query(
-    `UPDATE COMPANIES SET Name =? ,CGPA = ? WHERE Id = ?`,
-    [req.body.name, req.body.cgpa, req.params.id],
+    `UPDATE COMPANIES 
+    SET Name =? ,CGPA = ? ,Date_Of_Visit = ?, Last_Date_Of_Apply = ?, Package = ?, Description = ?, PDF = ?
+    WHERE Id = ?`,
+    [ Name, CGPA, Date_Of_Visit, Last_Date_Of_Apply, Package, Description, PDF,req.params.id ],
     function (err, results) {
       if (err) {
         if(err.sqlMessage){

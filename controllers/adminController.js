@@ -5,6 +5,7 @@ const getCompanies = require("./admin/getCompanies");
 const deleteCompany = require("./admin/deleteCompany");
 const addCompany = require("./admin/addCompany");
 const updateCompany = require("./admin/updateCompany");
+const getCompanyById = require("./admin/getCompanyById");
 
 module.exports = {
   //Login Admin
@@ -15,6 +16,8 @@ module.exports = {
   logout: logoutAdmin,
   //Get Companies
   companies: getCompanies,
+  //Get Company by Id
+  companyById: getCompanyById,
   //Delete Company by id
   deleteCompany: deleteCompany,
     //Add New Company
