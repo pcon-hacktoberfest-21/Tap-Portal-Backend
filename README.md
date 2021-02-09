@@ -9,20 +9,6 @@ The aim of this project is to develop an online application for training and pla
 
 # Routes
 
-## Admin Routes
-
-### /admin/register 
--- METHOD : POST 
--- REQUIRED FIELDS : name, email, password, branch
-
-### /admin/login 
--- METHOD : GET 
--- REQUIRED FIELDS : email, password
-
-### /admin/logout 
--- METHOD : GET 
--- REQUIRED : Token in Authorization Header
-
 ## Student Routes
 
 ### /student/register 
@@ -37,3 +23,38 @@ The aim of this project is to develop an online application for training and pla
 -- METHOD : GET 
 -- REQUIRED : Token in Authorization Header
 
+## Admin Routes
+
+### /admin/register 
+-- METHOD : POST 
+-- REQUIRED FIELDS : name, email, password, branch
+
+### /admin/login 
+-- METHOD : GET 
+-- REQUIRED FIELDS : email, password
+
+### /admin/logout 
+-- METHOD : GET 
+-- REQUIRED : Token in Authorization Header
+
+### /admin/companies  (get all companies)
+-- METHOD : GET 
+-- REQUIRED : Token in Authorization Header
+
+### /admin/companies/id    (get company by id)
+-- METHOD : GET 
+-- REQUIRED : Token in Authorization Header
+
+### /admin/companies/add   (add new company)
+-- METHOD : POST 
+-- REQUIRED : Token in Authorization Header, name in body
+-- OTHER FIELDS : (cgpa, dateofvisit, lastdateofapply, package, description, pdf) in body
+
+### /admin/companies/update/id     (update company by id)
+-- METHOD : PUT 
+-- REQUIRED : Token in Authorization Header, name in body
+-- OTHER FIELDS : (cgpa, dateofvisit, lastdateofapply, package, description, pdf) in body
+
+### /admin/companies/delete/id   (delete company by id)
+-- METHOD : DELETE 
+-- REQUIRED : Token in Authorization Header
