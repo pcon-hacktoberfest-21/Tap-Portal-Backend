@@ -31,6 +31,28 @@ const validateStudent = (req) => {
 
 };
 
+//VALIDATE DATA OF NEW COMPANY 
+const validateNewCompany = (req) => {
+  const schema = Joi.object({
+    name: Joi.string().min(2).required(),
+    cgpa: Joi.number().min(5).max(10).required()
+  });
+  return (schema.validate(req.body));
+
+};
+
+//VALIDATE DATA OF UPDATE COMPANY 
+const validateUpdateCompany = (req) => {
+  const schema = Joi.object({
+    name: Joi.string().min(2).required(),
+    cgpa: Joi.number().min(5).max(10).required()
+  });
+  return (schema.validate(req.body));
+
+};
+
 module.exports.validateAdmin = validateAdmin;
 module.exports.validateLogin = validateLogin;
 module.exports.validateStudent = validateStudent;
+module.exports.validateNewCompany = validateNewCompany;
+module.exports.validateUpdateCompany = validateUpdateCompany;
