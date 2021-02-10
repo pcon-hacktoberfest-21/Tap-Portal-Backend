@@ -20,5 +20,7 @@ router.post('/companies/add', adminController.addCompany);
 router.put('/companies/update/:id', adminController.updateCompany);
 //delete company
 router.delete('/companies/delete/:id', adminController.deleteCompany);
+//get company by branch
+router.get('/companies/branch/:branch',adminController.companiesByBranch);
 
 module.exports = router;

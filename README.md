@@ -45,15 +45,19 @@ The aim of this project is to develop an online application for training and pla
 -- METHOD : GET 
 -- REQUIRED : Token in Authorization Header
 
+### /admin/companies/branch/BRANCH    (get companies by BRANCH)
+-- METHOD : GET 
+-- REQUIRED : Token in Authorization Header
+
 ### /admin/companies/add   (add new company)
 -- METHOD : POST 
 -- REQUIRED : Token in Authorization Header, name in body
--- OTHER FIELDS : (cgpa, dateofvisit, lastdateofapply, package, description, pdf) in body
+-- OTHER FIELDS : (mincgpa, dateofvisit, lastdateofapply, package, description, pdf, branch seperated by commas) in body
 
 ### /admin/companies/update/id     (update company by id)
 -- METHOD : PUT 
 -- REQUIRED : Token in Authorization Header, name in body
--- OTHER FIELDS : (cgpa, dateofvisit, lastdateofapply, package, description, pdf) in body
+-- OTHER FIELDS : (mincgpa, dateofvisit, lastdateofapply, package, description, pdf, branch seperated by commas) in body
 
 ### /admin/companies/delete/id   (delete company by id)
 -- METHOD : DELETE 

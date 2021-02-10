@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
   //SQL Query
 
       
-db.query( `SELECT * FROM COMPANIES WHERE Id = ?`,req.params.id
+db.query( `SELECT * FROM COMPANIES WHERE Id = ?;SELECT * FROM ELIGIBLE_BRANCHES`,req.params.id
   ,(err,results)=>{
     if (err) {
       if(err.sqlMessage){
@@ -40,7 +40,14 @@ db.query( `SELECT * FROM COMPANIES WHERE Id = ?`,req.params.id
            { status: false,
         message: "Id doesn't exist",
            });
-res.send(results);
+           results[0].map(result=>{
+            result.Branch = `${
+              results[1].map(result2=>{if(result2.Company_Id==result.Id){
+                return result2.Branch
+              }}).filter(Boolean).join(',') || null
+            }`;
+          })
+res.send(results[0]);
 // console.log(results);
     }})}
  

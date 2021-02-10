@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const db = require("../../db");
 const logger = require("../../utils/logger");
-const { validateNewCompany } = require("../../middleWares/validation");
+const { validateUpdateCompany, validateBranchDetails } = require("../../middleWares/validation");
+const { request } = require("express");
 
 
 module.exports = async (req, res) => {
@@ -24,7 +25,7 @@ module.exports = async (req, res) => {
   const email = decodedToken.Email;
 
 //Validate Admin Details
-const validation = validateNewCompany(req);
+const validation = validateUpdateCompany(req);
 if (validation.error) {
   return res
     .status(400)
@@ -32,18 +33,27 @@ if (validation.error) {
 }
   //Aquiring Data to Insert
   const Name = req.body.name;
-  const CGPA = req.body.cgpa || null;
+  const Min_CGPA = req.body.mincgpa || null;
   const Date_Of_Visit = req.body.dateofvisit || null;
   const Last_Date_Of_Apply = req.body.lastdateofapply || null;
   const Package = req.body.package || null;
   const Description = req.body.description || null;
   const PDF = req.body.pdf || null;
+  const reqbranch = req.body.branch || '';
+  const branchList = reqbranch.replace(/ /g, '').split(',');
+  //Validate Branch
+  const validationBranch = validateBranchDetails({branch:branchList});
+  if (validationBranch.error) {
+    return res
+      .status(400)
+      .send({ status: false, message: validationBranch.error.details[0].message });
+  }
 //SQL query 
 db.query(
     `UPDATE COMPANIES 
-    SET Name =? ,CGPA = ? ,Date_Of_Visit = ?, Last_Date_Of_Apply = ?, Package = ?, Description = ?, PDF = ?
+    SET Name =? ,Min_CGPA = ? ,Date_Of_Visit = ?, Last_Date_Of_Apply = ?, Package = ?, Description = ?, PDF = ?
     WHERE Id = ?`,
-    [ Name, CGPA, Date_Of_Visit, Last_Date_Of_Apply, Package, Description, PDF,req.params.id ],
+    [ Name, Min_CGPA, Date_Of_Visit, Last_Date_Of_Apply, Package, Description, PDF,req.params.id ],
     function (err, results) {
       if (err) {
         if(err.sqlMessage){
@@ -55,11 +65,44 @@ db.query(
           message: "Something went wrong",
         })}
       }  else {
+        if(branchList.length !== 0){
+          //Update Branches from ELIGIBLE_BRANCHES Table
+          const sql = branchList.map(branch=> `('${req.params.id}','${branch}')`).join(',')
+          db.query(`DELETE FROM ELIGIBLE_BRANCHES WHERE Company_Id =${req.params.id};
+            INSERT INTO ELIGIBLE_BRANCHES ( Company_Id, Branch ) VALUES ${sql}`,
+            (err, results) => {
+              if (err) {             
+                if (err.sqlMessage) {
+                  res.status(400).send({
+                    status: false,
+                    message: err.sqlMessage,
+                  });
+                } else {
+                  res.status(500).send({
+                    status: false,
+                    message: "Something went wrong",
+                  });
+                }
+              } else {
+                //log to db
+                logger(
+                  `Company Updated with Id = ${req.params.id} & Name = ${req.body.name}`,
+                  email,
+                  ip
+                );
+                res.send({
+                  message: "Company Updated Successfully ",
+                  Id:req.params.id
+                });
+              }
+            }
+          );}else{
         //log to db
-        logger(`Company Updated with Id = ${req.params.id} Name = ${req.body.name}`, email, ip);
+        logger(`Company Updated with Id = ${req.params.id} & Name = ${req.body.name}`, email, ip);
         res.send({
           message: "Company Updated Successfully ",
-        });
+          Id:req.params.id
+        });}
       }
     }
   );
