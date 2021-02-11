@@ -1,27 +1,14 @@
-const jwt = require("jsonwebtoken");
 const db = require("../../db");
 const logger = require("../../utils/logger");
-const { validateNewCompany, validateBranchDetails } = require("../../middleWares/validation");
+const {
+  validateNewCompany,
+  validateBranchDetails,
+} = require("../../middleWares/validation");
 
 module.exports = async (req, res) => {
-  //Acquiring token from header
-  const authHeader = req.get("Authorization");
+  //Aquiring header data
+  const email = res.locals.decodedToken.Email;
   const ip = req.header("x-forwarded-for") || req.connection.remoteAddress;
-
-  //checking if token exists in header
-  if (!authHeader)
-    return res.status(403).send({ message: "resource not avilable" });
-  console.log(authHeader);
-
-  //checking if token is expired or altered
-  let decodedToken;
-  try {
-    decodedToken = await jwt.verify(authHeader, process.env.TOKEN_SECRET);
-  } catch (error) {
-    if (error)
-      return res.status(403).send({ message: "resource not avilable" });
-  }
-  const email = decodedToken.Email;
 
   //Validate New Admin Details
   const validation = validateNewCompany(req);
@@ -39,14 +26,17 @@ module.exports = async (req, res) => {
   const Package = req.body.package || null;
   const Description = req.body.description || null;
   const PDF = req.body.pdf || null;
-  const reqbranch = req.body.branch || '';
-  const branchList = reqbranch.replace(/ /g, '').split(',');
+  const reqbranch = req.body.branch || "";
+  const branchList = reqbranch.replace(/ /g, "").split(",");
   //Validate Branch
-  const validationBranch = validateBranchDetails({branch:branchList});
+  const validationBranch = validateBranchDetails({ branch: branchList });
   if (validationBranch.error) {
     return res
       .status(400)
-      .send({ status: false, message: validationBranch.error.details[0].message });
+      .send({
+        status: false,
+        message: validationBranch.error.details[0].message,
+      });
   }
   //SQL query
   db.query(
@@ -75,39 +65,41 @@ module.exports = async (req, res) => {
           });
         }
       } else {
-        if(branchList.length !== 0){
-        //Insert Branches into ELIGIBLE_BRANCHES Table
-        const sql = branchList.map(branch=> `('${Id}','${branch}')`).join(',')
-        db.query(
-          `INSERT INTO ELIGIBLE_BRANCHES ( Company_Id, Branch ) VALUES ${sql}`,
-          (err, results) => {
-            if (err) {             
-              if (err.sqlMessage) {
-                res.status(400).send({
-                  status: false,
-                  message: err.sqlMessage,
-                });
+        if (branchList.length !== 0) {
+          //Insert Branches into ELIGIBLE_BRANCHES Table
+          const sql = branchList
+            .map((branch) => `('${Id}','${branch}')`)
+            .join(",");
+          db.query(
+            `INSERT INTO ELIGIBLE_BRANCHES ( Company_Id, Branch ) VALUES ${sql}`,
+            (err, results) => {
+              if (err) {
+                if (err.sqlMessage) {
+                  res.status(400).send({
+                    status: false,
+                    message: err.sqlMessage,
+                  });
+                } else {
+                  res.status(500).send({
+                    status: false,
+                    message: "Something went wrong",
+                  });
+                }
               } else {
-                res.status(500).send({
-                  status: false,
-                  message: "Something went wrong",
+                //log to db
+                logger(
+                  `New Company Added with Id =${Id} & Name = ${req.body.name}`,
+                  email,
+                  ip
+                );
+                res.send({
+                  message: "New Company Added Successfully ",
+                  Id,
                 });
               }
-            } else {
-              //log to db
-              logger(
-                `New Company Added with Id =${Id} & Name = ${req.body.name}`,
-                email,
-                ip
-              );
-              res.send({
-                message: "New Company Added Successfully ",
-                Id
-              });
             }
-          }
-        );}
-        else{
+          );
+        } else {
           //log to db
           logger(
             `New Company Added with Id =${Id} & Name = ${req.body.name}`,
@@ -116,7 +108,7 @@ module.exports = async (req, res) => {
           );
           res.send({
             message: "New Company Added Successfully ",
-            Id
+            Id,
           });
         }
       }

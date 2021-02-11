@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
               {
                 Email: results[0].Email,
               },
-              process.env.TOKEN_SECRET,
+              process.env.ADMIN_TOKEN_SECRET,
               { expiresIn: "1h" }
             );
           }

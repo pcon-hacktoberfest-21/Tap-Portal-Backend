@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
   //checking if token is expired or altered
   let decodedToken;
   try {
-    decodedToken = await jwt.verify(authHeader, process.env.TOKEN_SECRET);
+    decodedToken = await jwt.verify(authHeader, process.env.ADMIN_TOKEN_SECRET);
   } catch (error) {
     if (error) return res.status(400).send({ message: "can't logout" });
   }

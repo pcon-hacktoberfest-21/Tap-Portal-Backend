@@ -21,11 +21,10 @@ module.exports = {
   companyById: getCompanyById,
   //Delete Company by id
   deleteCompany: deleteCompany,
-    //Add New Company
-    addCompany: addCompany,
-    // Update Company by id
-    updateCompany: updateCompany,
-    //Get Companies by Branch
-    companiesByBranch: getCompaniesByBranch,
-  
+  //Add New Company
+  addCompany: addCompany,
+  // Update Company by id
+  updateCompany: updateCompany,
+  //Get Companies by Branch
+  companiesByBranch: getCompaniesByBranch,
 };
