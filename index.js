@@ -15,7 +15,7 @@ const db= require('./db')
 
 //requiring routes
 const studentAuth = require('./routes/students/auth')
-const adminAuth = require('./routes/admin/auth')
+const adminAuth = require('./routes/admin/adminRouter')
 
 //using routes
 app.use('/student',studentAuth);
