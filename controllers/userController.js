@@ -15,7 +15,7 @@ module.exports = {
     const ip = req.header("x-forwarded-for") || req.connection.remoteAddress;
 
     //INPUT DATA VALIDATION
-    const validation = validateStudent(req);
+    const validation = await validateStudent(req);
     if (validation.error) {
       return res
         .status(400)
