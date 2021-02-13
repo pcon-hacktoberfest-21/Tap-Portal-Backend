@@ -5,7 +5,8 @@ let pool = mysql.createPool({
     ssl:true,
     user:process.env.USER,
     password:process.env.PASSWORD,
-    database:process.env.DATABASE
+    database:process.env.DATABASE,
+    multipleStatements: true
 })
 
 pool.getConnection((err,connection)=>{
