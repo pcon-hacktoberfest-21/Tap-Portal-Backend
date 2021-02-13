@@ -35,8 +35,8 @@ module.exports= async(req,res,next)=>{
 
         // getting information about the student from db 
         await db.query(
-                `SELECT * FROM STUDENT WHERE Email = ? `,
-                [decodedToken.Email],async function (err, results) {
+                `SELECT * FROM STUDENT WHERE Email =( SELECT Email FROM ALL_USER WHERE Token= ?)`,
+                [token],async function (err, results) {
                     if (err) {
                     console.log(err);
                     throw Error('_'); 
