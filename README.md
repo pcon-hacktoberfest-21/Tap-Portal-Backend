@@ -62,3 +62,21 @@ The aim of this project is to develop an online application for training and pla
 ### /admin/companies/delete/id   (delete company by id)
 -- METHOD : DELETE 
 -- REQUIRED : Token in Authorization Header
+
+## SELECTED STUDENTS API
+
+### /select/all  
+-- METHOD : GET
+-- REQUIRED : Token in Authorization Header
+
+### /select/company/:company 
+-- METHOD : GET
+-- REQUIRED : Token in Authorization Header
+
+### /select/branch/:branch 
+-- METHOD : GET
+-- REQUIRED : Token in Authorization Header
+
+### /select/:regNo
+-- METHOD : GET
+-- REQUIRED : Token in Authorization Header
