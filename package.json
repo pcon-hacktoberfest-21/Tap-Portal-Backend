@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/pcon-code-tribe/Tap-Portal-Backend#readme",
   "dependencies": {
+
     "@hapi/joi": "^17.1.1",
     "@sendgrid/mail": "^7.4.2",
     "bcryptjs": "^2.4.3",
@@ -26,6 +27,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+
     "mysql": "^2.18.1"
   }
 }
