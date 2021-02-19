@@ -5,13 +5,17 @@ let pool = mysql.createPool({
     ssl:true,
     user:process.env.USER,
     password:process.env.PASSWORD,
+
+
     database:process.env.DATABASE,
     multipleStatements: true
+
 })
 
 pool.getConnection((err,connection)=>{
     if(err){
         console.log(err);
+
     } 
     else console.log("Database Connected");
 
@@ -20,4 +24,5 @@ pool.getConnection((err,connection)=>{
 });
 
 module.exports = pool;
+
 

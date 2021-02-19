@@ -23,6 +23,14 @@ The aim of this project is to develop an online application for training and pla
 -- METHOD : GET 
 -- REQUIRED : Token in Authorization Header
 
+### /studentQuery/
+-- METHOD : GET
+-- REQUIRED FIELDS : Token in Authorization Header
+
+### /studentQuery/update
+-- METHOD : PUT 
+-- REQUIRED FIELDS : tenth,twelfth,cv,Token in Authorization Header
+
 ## Admin Routes
 
 ### /admin/register 

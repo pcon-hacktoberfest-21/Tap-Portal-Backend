@@ -20,15 +20,15 @@ app.get('/', function (req, res) {
 
 //requiring routes
 const studentAuth = require('./routes/students/auth')
-const admin = require('./routes/admin/adminRouter')
+const adminAuth = require('./routes/admin/adminRouter')
+const studentQuery= require('./routes/students/student')
 const sRc = require('./routes/student_R_company/index')
-
 //using routes
 app.use('/student',studentAuth);
-app.use('/admin',admin);
-app.use('/select',sRc)
+app.use('/studentQuery',studentQuery);
+app.use('/admin',adminAuth);
+app.use('/select',sRc);
 
-//listening to the port
 app.listen(PORT,()=>{
     console.log(`Listening at port ${PORT}`)
 })
