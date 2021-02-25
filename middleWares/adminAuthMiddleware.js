@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
   //checking if token is expired or altered
   try {
     res.locals.decodedToken = await jwt.verify(
-      authHeader,
+      authHeader.split(' ')[1],
       process.env.ADMIN_TOKEN_SECRET
     );
     next();
