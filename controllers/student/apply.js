@@ -10,7 +10,7 @@ const apply = async (req,res) => {
     const email = req.body.email;
 
     //Get CGPA AND BRANCH FOR CHECKING ELEGIBILITY 
-    const eligible = isEligible(email, 1);
+    const eligible = isEligible(email, 1, Company_id);
     if(eligible.status){
       db.query(
         `INSERT INTO APPLICATION (COMPANY_ID, RegNo,Status) VALUES(?,?)`,
