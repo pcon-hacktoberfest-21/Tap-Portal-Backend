@@ -1,6 +1,6 @@
 require("dotenv").config()
 const PORT = process.env.PORT || 3000;
-
+const schedule= require('node-schedule')
 const bodyParser = require('body-parser')
 const express = require("express")
 const app = express()
@@ -26,8 +26,12 @@ app.use('/admin',adminAuth);
 
 // importing database content
 
-
-
+// schedule job to inform student about companies
+const updateStudentAboutCompaney=require('./utils/updateStudentAboutCompanies')
+schedule.scheduleJob('*/10 * * * * *',async ()=>{
+    console.log("i ran guyes.....");
+    await updateStudentAboutCompaney(1);
+})
 
 
 
