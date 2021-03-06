@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const db = require("../../db");
 const { validateStudent } = require("../../middleWares/validation");
+const { WelcomeEmail } = require("../../utils/email");
 const logger = require("../../utils/logger");
 
 const register = async (req, res) => {
@@ -38,6 +39,7 @@ const register = async (req, res) => {
         else {
           console.log(results);
           //log to db
+          WelcomeEmail(email,email)
           logger("new user registered", email, ip);
           res.send({
             status: true,
