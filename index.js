@@ -13,14 +13,21 @@ app.use(bodyParser.json())
 // importing database content
 const db= require('./db')
 
+//root route
+app.get('/', function (req, res) {
+    res.send("<marquee><h1>WELCOME TO TAP PORTAL (under construction)</h1></marquee>")
+})
+
 //requiring routes
 const studentAuth = require('./routes/students/auth')
 const adminAuth = require('./routes/admin/adminRouter')
 const studentQuery= require('./routes/students/student')
+const sRc = require('./routes/student_R_company/index')
 //using routes
 app.use('/student',studentAuth);
 app.use('/studentQuery',studentQuery);
 app.use('/admin',adminAuth);
+
 
 
 
@@ -33,6 +40,9 @@ schedule.scheduleJob('*/10 * * * * *',async ()=>{
     await updateStudentAboutCompaney(1);
 })
 
+
+
+app.use('/select',sRc);
 
 
 app.listen(PORT,()=>{
