@@ -1,6 +1,5 @@
-d 
 const db = require('../db');
-const isEligible = (email, minPlacement, companyId) => {
+const isEligible = (email, minPlacement,Company_id) => {
 
     db.query(
         `SELECT Cgpa,Branch,RegNo FROM STUDENT WHERE Email = ? `,
@@ -51,8 +50,8 @@ const isEligible = (email, minPlacement, companyId) => {
                                             for(var i=0;i<results.length();i++){
                                                 if(results[i].Branch == branch){
                                                 status = true;
+                                                }
                                             }
-                                        }
                                         if(status){
                                             db.query(`SELECT COUNT(*) as count FROM SELECTED WHERE RegNo ?`,[regNo], (err, results)=>{
                                                 if(err){
