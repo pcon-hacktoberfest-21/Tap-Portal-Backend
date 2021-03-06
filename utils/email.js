@@ -1,18 +1,39 @@
-const sgMail = require('@sendgrid/mail')
+const sgMail = require("@sendgrid/mail");
 
+const sendgridApikey = "";
 
-const sendgridApikey = ''
-
-sgMail.setApiKey(sendgridApikey)
+sgMail.setApiKey(sendgridApikey);
 
 const WelcomeEmail = (email, name) => {
-    sgMail.send({
-        to: email,
-        from: 'tap@nitjsr.ac.in',
-        subject: 'Thnx for joining TAP',
-        text: `Welcome to TAP, ${name}.`
-    })
-} 
+  sgMail.send({
+    to: email,
+    from: "tap@nitjsr.ac.in",
+    subject: "Thnx for joining TAP",
+    text: `Welcome to TAP, ${name}.`,
+  });
+};
+
+const resetPasswordEmail = (email, link) => {
+  sgMail.send({
+    to: email,
+    from: "tap@nitjsr.ac.in",
+    subject: "RESET PASSWORD LINK",
+    html: `<div>
+    <p>
+        You have requested a password reset, please follow the link below to reset your password.
+    </p>
+    <p>
+        Please ignore this email if you did not request a password change.
+    </p>
+
+    <p>
+        <a href="${link}">
+            Follow this link to reset your password.
+        </a>
+    </p>
+</div>`,
+  });
+};
 
 const CompaniesUpdates=(email,company)=>{
     const {Id,Name,Min_CGPA,Date_Of_Visit,Last_Date_Of_Apply,Package,Discription,PDF,Updated}=company;
@@ -44,5 +65,6 @@ const CompaniesUpdates=(email,company)=>{
 
 module.exports = {
     WelcomeEmail,
-    CompaniesUpdates
-}
+    CompaniesUpdates,
+    resetPasswordEmail,
+};

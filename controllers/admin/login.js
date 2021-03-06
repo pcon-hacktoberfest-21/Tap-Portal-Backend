@@ -45,6 +45,7 @@ module.exports = async (req, res) => {
           let token;
 
           //If token is not there then providing a new token
+          console.log(results[0].Token);
           if (results[0].Token == null) {
             token = jwt.sign(
               {
@@ -59,7 +60,7 @@ module.exports = async (req, res) => {
           //If expired providing him/ her new token
           //Else returing the same token
           else {
-            token = refreshToken(results[0].Token, results[0].Email);
+            token = refreshToken(results[0].Token, results[0].Email, "admin");
           }
 
           console.log(token);
@@ -87,6 +88,7 @@ module.exports = async (req, res) => {
               tokenExpiration: 1,
               email: results[0].Email,
             });
+            //send email if logged from different ip
           } else {
             res.send({
               message,
