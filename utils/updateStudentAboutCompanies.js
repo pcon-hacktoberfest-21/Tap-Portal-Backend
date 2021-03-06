@@ -1,6 +1,6 @@
 //const db=require('../db')
 const db=require('../db');
-
+const {CompaniesUpdates}=require('../utils/email')
 module.exports= async (minPlacements)=>{
 
     // getting companies which still not sent mail to student
@@ -31,11 +31,6 @@ module.exports= async (minPlacements)=>{
                         if(errorInFeatchingstudent)
                         console.log("got error suring fetching data about students");
                         else{
-                              await db.query('UPDATE COMPANIES SET Student_informed=true WHERE Id=?',[Id],(errorDuringCompaneyUpdate,_)=>{
-                                  if(errorDuringCompaneyUpdate)
-                                  console.log("found error during companey update");
-                                  else console.log("updated companey sucessfulley");
-                              })
                               await students.map(async (student)=>{
                               console.log("went into student loop");
                                // it varifies number of placemments stutent got and proceed further if placement count is less than minimum one
@@ -49,7 +44,12 @@ module.exports= async (minPlacements)=>{
                                        
                                     if(student.Cgpa>=Min_CGPA && eligibleBranches[student.Branch] && placementCountEligible  )
                                     {
-                                            console.log(`sent mail to ${student.Name} for companey ${Name}`);
+                                          try{
+                                              await CompaniesUpdates(student.Email,res);
+                                              console.log(`sent mail to ${student.Name} for companey ${Name}`);
+                                            } catch(erorMail){
+                                                console.log(`not able to send mail to ${student.Name}`);
+                                          }   
                                     }
                                     else{
                                         console.log("not eligible to to send mail ");
@@ -57,6 +57,12 @@ module.exports= async (minPlacements)=>{
                                 });
             
                         })}
+                        // updateing db that students are informed about the companey
+                        await db.query('UPDATE COMPANIES SET Student_informed=true WHERE Id=?',[Id],(errorDuringCompaneyUpdate,_)=>{
+                            if(errorDuringCompaneyUpdate)
+                            console.log("found error during companey update");
+                            else console.log("updated companey sucessfulley");
+                        })
                     })
 
               });
