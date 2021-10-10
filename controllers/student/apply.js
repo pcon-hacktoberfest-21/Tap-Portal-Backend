@@ -38,6 +38,7 @@ const apply = async (req,res) => {
       );  
     }
     else{
+      //status true and eligble
       res.send({
         status: true,
         message: eligible.message,
