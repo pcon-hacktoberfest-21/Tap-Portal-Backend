@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const logger = require("../../utils/logger");
 module.exports = async (req, res) => {
   //Acquiring token from header
-  const token = req.get("Authorization");
+  const token = req.get("Authorization").split(' ')[1];
   const password = req.body.password;
   if (!password)
     return res.status(400).send({ message: "password is required" });
@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
       process.env.PASSWORD_RESET_TOKEN_SECRET
     );
     email = decodedToken.Email;
+    console.log(decodedToken);
   } catch (error) {
     if (error)
       return res.status(403).send({ message: "resource not avilable" });
@@ -47,7 +48,7 @@ module.exports = async (req, res) => {
       } else {
         res.send({ message: "Password Updated Successfully " });
         //log to db
-        logger("Password Updated", email, ip);
+        logger("Password Updated", email, ip,'admin');
       }
     }
   );

@@ -40,7 +40,7 @@ const register = async (req, res) => {
           console.log(results);
           //log to db
           WelcomeEmail(email,email)
-          logger("new user registered", email, ip);
+          logger("new user registered", email, ip,'user');
           res.send({
             status: true,
             message: "Successfully registered",

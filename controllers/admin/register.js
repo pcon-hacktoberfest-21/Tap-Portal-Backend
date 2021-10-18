@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
       } else {
         console.log(results);
         //log to db
-        logger("new admin registered", email, ip);
+        logger("new admin registered", email, ip,'admin');
         res.send({
           message: "Successfully registered",
         });

@@ -92,7 +92,8 @@ module.exports = async (req, res) => {
                 logger(
                   `Company Updated with Id = ${req.params.id} & Name = ${req.body.name}`,
                   email,
-                  ip
+                  ip,
+                  'admin'
                 );
                 res.send({
                   message: "Company Updated Successfully ",
@@ -106,7 +107,8 @@ module.exports = async (req, res) => {
           logger(
             `Company Updated with Id = ${req.params.id} & Name = ${req.body.name}`,
             email,
-            ip
+            ip,
+            'admin'
           );
           res.send({
             message: "Company Updated Successfully ",

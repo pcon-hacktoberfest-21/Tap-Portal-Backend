@@ -82,7 +82,7 @@ module.exports = async (req, res) => {
 
           if (status) {
             //log to db
-            logger("admin logged in", email, ip);
+            logger("admin logged in", email, ip,'admin');
             res.send({
               token: token,
               tokenExpiration: 1,
