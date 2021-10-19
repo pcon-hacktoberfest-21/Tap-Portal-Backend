@@ -83,7 +83,7 @@ const login = async (req, res) => {
             );
 
             if (status) {
-              logger("user logged in", email, ip);
+              logger("user logged in", email, ip,'user');
               res.send({
                 status,
                 token,

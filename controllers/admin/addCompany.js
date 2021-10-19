@@ -90,7 +90,8 @@ module.exports = async (req, res) => {
                 logger(
                   `New Company Added with Id =${Id} & Name = ${req.body.name}`,
                   email,
-                  ip
+                  ip,
+                  'admin'
                 );
                 res.send({
                   message: "New Company Added Successfully ",

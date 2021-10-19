@@ -33,7 +33,8 @@ module.exports = async (req, res) => {
         logger(
           `${results.affectedRows} Company deleted with Id = ${req.params.id}`,
           email,
-          ip
+          ip,
+          'admin'
         );
         console.log(results);
         res.send({

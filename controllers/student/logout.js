@@ -5,7 +5,7 @@ const logger = require("../../utils/logger");
 
 const logout = async (req, res) => {
     //Acquiring token from header
-    const authHeader = req.get("Authorization");
+    const authHeader = req.get("Authorization").split(' ')[1];
     const ip = req.header("x-forwarded-for") || req.connection.remoteAddress;
 
     //checking if token exists in header
@@ -53,7 +53,7 @@ const logout = async (req, res) => {
                 });
               } else {
                 console.log("logged you out");
-                logger("user logged out", email, ip);
+                logger("user logged out", email, ip,'user');
                 res.send({
                   status: true,
                   message: "Successfully logged you out",

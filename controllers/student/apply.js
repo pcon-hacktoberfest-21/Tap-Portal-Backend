@@ -28,7 +28,7 @@ const apply = async (req,res) => {
           else {
             console.log(results);
             //log to db
-            logger("new application accepted", email, req.header("x-forwarded-for") || req.connection.remoteAddress);
+            logger("new application accepted", email, req.header("x-forwarded-for") || req.connection.remoteAddress,'user');
             res.send({
               status: true,
               message: "Successfully Applied",
