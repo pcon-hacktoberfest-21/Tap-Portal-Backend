@@ -42,4 +42,7 @@ router.put("/reset-password", adminController.resetPassword);
 // get past activity
 router.get("/activity", authMiddleware, adminController.getPastActivity);
 
+//download excel file 
+router.get("/excel/download",authMiddleware,adminController.downloadExcel);
+
 module.exports = router;
