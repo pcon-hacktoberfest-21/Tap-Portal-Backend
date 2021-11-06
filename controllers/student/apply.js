@@ -6,15 +6,17 @@ const apply = async (req,res) => {
   
     //Acquiring Company_id
     const Company_id = req.body.companyId;
-    const regNo = req.body.regNo;
-    const email = req.body.email;
+
+    //regNo and email sholud be filled by default
+    const regNo = req.student.RegNo;
+    const email = req.student.Email;
 
     //Get CGPA AND BRANCH FOR CHECKING ELEGIBILITY 
-    const eligible = isEligible(email, 1, Company_id);
+    const eligible = await isEligible(email, 1, Company_id,regNo);
     if(eligible.status){
       db.query(
-        `INSERT INTO APPLICATION (COMPANY_ID, RegNo,Status) VALUES(?,?)`,
-        [Company_id, regNo,'Applied'],
+        `INSERT INTO APPLICATION (Email,COMPANY_ID, RegNo,Status) VALUES(?,?,?,?)`,
+        [email,Company_id, regNo,'Applied'],
         function (err, results) {
           //Application failed
           if (err) {

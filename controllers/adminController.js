@@ -10,6 +10,7 @@ const getCompaniesByBranch = require("./admin/getCompaniesByBranch");
 const forgetPassword = require("./admin/forgetPassword");
 const resetPassword = require("./admin/resetPassword");
 const getPastActivity = require("./admin/getPastActivity");
+const downloadExcel=require("./admin/downloadExcel");
 
 module.exports = {
   //Login Admin
@@ -36,4 +37,6 @@ module.exports = {
   resetPassword,
   //get past activity
   getPastActivity,
+  //download excel file
+  downloadExcel:downloadExcel,
 };
